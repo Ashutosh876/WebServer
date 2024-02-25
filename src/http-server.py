@@ -14,8 +14,21 @@ def handle_request(client_socket):
     # Parse the first line to extract the request method and path
     method, path, _ = first_line.split(" ")
 
-    # Create the HTTP response with the requested path
-    response = f"HTTP/1.1 200 OK\r\n\r\nRequested path: {path}\r\n"
+    # Check if the requested path is '/' or '/index.html'
+    if path == '/' or path == '/index.html':
+        # Open the index.html file
+        try:
+            with open('www/index.html', 'r') as f:
+                # Read the contents of the file
+                content = f.read()
+            # Create the HTTP response with the content of index.html
+            response = f"HTTP/1.1 200 OK\r\n\r\n{content}\r\n"
+        except FileNotFoundError:
+            # If index.html file is not found, return a 404 Not Found response
+            response = "HTTP/1.1 404 Not Found\r\n\r\n404 Not Found\r\n"
+    else:
+        # Create the HTTP response with the requested path
+        response = f"HTTP/1.1 200 OK\r\n\r\nRequested path: {path}\r\n"
 
     # Send the HTTP response back to the client
     client_socket.send(response.encode())
