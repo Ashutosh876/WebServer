@@ -16,8 +16,6 @@ def make_request(url):
 
 
 def make_requests(url, num_requests, num_concurrent):
-    # Create a list of URLs to make requests to
-    urls = [url] * num_requests
 
     successes = 0
     failures = 0
@@ -25,7 +23,7 @@ def make_requests(url, num_requests, num_concurrent):
     # Create a ThreadPoolExecutor with the specified number of concurrent workers
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_concurrent) as executor:
         # Submit tasks for each URL
-        futures = [executor.submit(make_request, url) for url in urls]
+        futures = [executor.submit(make_request, url) for _ in range(num_requests)]
 
         # Wait for all tasks to complete
         for future in concurrent.futures.as_completed(futures):
