@@ -1,5 +1,6 @@
 import socket
 import os
+import threading
 
 
 def validate_path(requested_path, www_dir):
@@ -69,8 +70,9 @@ def main(www_dir):
         client_socket, client_address = server_socket.accept()
         print(f"Connection from {client_address}")
 
-        # Handle the client's request
-        handle_request(client_socket, www_dir)
+        # Create a new thread to handle the client connection
+        client_thread = threading.Thread(target=handle_request, args=(client_socket, www_dir))
+        client_thread.start()
 
 
 if __name__ == "__main__":
